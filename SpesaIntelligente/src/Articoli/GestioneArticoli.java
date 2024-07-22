@@ -74,7 +74,7 @@ public class GestioneArticoli {
 		{
 			for(Articolo StampaArticoloPerCategoria: ArrayDiArticoli)
 			{
-				if (StampaArticoloPerCategoria.getCategoriaArticolo().equals(RicercaPerCategoria))//aVREI POTUTO USARE IL METODO IS EQUAL(CON OGGETTO) PER VERIFICARE L'UGUAGLIANZA INTERA TRA DUE OGGETTI MA DOPO L'UTENTE AVREBBE DOVUTO INSERIRE TUTTI I DATI 
+				if (StampaArticoloPerCategoria.getCategoriaArticolo().equalsIgnoreCase(RicercaPerCategoria))//aVREI POTUTO USARE IL METODO IS EQUAL(CON OGGETTO) PER VERIFICARE L'UGUAGLIANZA INTERA TRA DUE OGGETTI MA DOPO L'UTENTE AVREBBE DOVUTO INSERIRE TUTTI I DATI 
 				{
 					System.out.println(StampaArticoloPerCategoria);
 					
