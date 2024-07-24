@@ -1,5 +1,6 @@
 package Articoli;
 import java.util.ArrayList;
+import java.time.*;
 public class GestioneArticoli {
 
 	
@@ -18,11 +19,66 @@ public class GestioneArticoli {
 		//metodi per la gestione
 		
 		
-		//Inserimento nuovo articolo
-		public void AggiungiArticolo(Articolo articolo) 
+		//Inserimento nuovo articolo 
+		public void AggiungiArticoloCompleto(Articolo articolo) 
 		{
-			ArrayDiArticoli.add(articolo);//con questo aggiungiamo l'oggetto articolo all'array di articoli
+				ArrayDiArticoli.add(articolo);
+			   	System.out.println("\nArticolo aggiunto.\n");
 		}
+		//verifichiamo se l'articolo esiste già con un for each e con dentro un if
+		public boolean VerificaCodice( int code)
+		{
+			if (code<=0 || code>=1000)
+			{
+			System.out.println("\nPuoi inserire solo un codice articolo compreso tra 001 e 1000 \n");
+			return false;
+			}
+			else
+			{
+			for (Articolo ArticoloEsisteOppureNo : ArrayDiArticoli) 
+			{//for each e verifichiamo se esiste già
+	            if (ArticoloEsisteOppureNo.getCodiceArticolo() == code) 
+	            {
+	               
+	                System.out.println("\nArticolo già presente.\n");
+	               
+	                return false;
+	            }
+	        }
+			//Altrimenti finisce il ciclo for ed esce e riprende il valore true
+	        return true;
+			}
+				
+		}
+		
+		
+		
+		
+		public boolean VerificaCodiceSePresente( int code)
+		{
+			if (code<=0 || code>=1000)
+			{
+			System.out.println("\nPuoi inserire solo un codice articolo compreso tra 001 e 1000 \n");
+			return false;
+			}
+			else
+			{
+			for (Articolo ArticoloEsisteOppureNo : ArrayDiArticoli) 
+			{//for each e verifichiamo se esiste già
+	            if (ArticoloEsisteOppureNo.getCodiceArticolo() == code) 
+	            {
+	            	return true;
+	            }
+	        }
+			//Altrimenti finisce il ciclo for ed esce e riprende il valore true
+			 System.out.println("\nArticolo non presente.\n");
+			return false;
+			
+			}
+				
+		}
+		
+		
 		
 		
 		//Stampa tutti gli oggetti di articoli presenti nell'array
@@ -34,8 +90,7 @@ public class GestioneArticoli {
 			}
 		}
 		
-		//Ricerca articolo per categoria - da rivedere
-		//Ricerca articolo per sconto >= sconto inserito da fare
+	//Richiamare Giorgia tipa figa contabilità
 		
 		
 		public Articolo CercaArticoloPerCodice (int Codice) 
@@ -50,26 +105,6 @@ public class GestioneArticoli {
 			return null;
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		public boolean ModificaArticolo(int CodiceArticoloDaModificare, Articolo ArticoloDaModificare)
-		{
-			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
-			if(articolo != null)
-			{
-				ArrayDiArticoli.set(ArrayDiArticoli.indexOf(articolo),ArticoloDaModificare);
-				return true;
-				
-			}
-			return false;
-		} 
-		
 		public void RicercaPerCategoria(String RicercaPerCategoria)
 		{
 			for(Articolo StampaArticoloPerCategoria: ArrayDiArticoli)
@@ -80,8 +115,6 @@ public class GestioneArticoli {
 					
 				}
 			}
-			
-			
 		}
 		
 		
@@ -98,10 +131,82 @@ public class GestioneArticoli {
 		}
 		
 		
+		public boolean ModificaPrezzo(int CodiceArticoloDaModificare, double NuovoPrezzo)
+		{
+			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
+			if(articolo != null)
+			{
+				articolo.setPrezzoArticolo(NuovoPrezzo);
+				return true;
+				
+			}
+			return false;
+		} 
 		
 		
 		
 		
+		
+		
+		
+		
+		public boolean ModificaSconto(int CodiceArticoloDaModificare, double NuovoSconto)
+		{
+			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
+			if(articolo != null)
+			{
+				articolo.setScontoArticolo(NuovoSconto);
+				return true;
+				
+			}
+			return false;
+		} 
+		
+		
+		
+		
+		
+		public boolean ModificaDataInizioOfferta(int CodiceArticoloDaModificare, LocalDate NuovaDataInizio)
+		{
+			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
+			if(articolo != null && articolo.getDataFineOfferta().isAfter(NuovaDataInizio))
+			{
+				articolo.setDataInizioOfferta(NuovaDataInizio);;
+				return true;
+				
+			}
+			return false;
+		} 
+		
+		
+		public boolean ModificaDataFineOfferta(int CodiceArticoloDaModificare, LocalDate NuovaDataInizio)
+		{
+			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
+			if(articolo != null && articolo.getDataFineOfferta().isBefore(NuovaDataInizio))
+			{
+				articolo.setDataInizioOfferta(NuovaDataInizio);;
+				return true;
+				
+			}
+			return false;
+		} 
+		
+		
+		public boolean ModificaArticolo(int CodiceArticoloDaModificare, Articolo ArticoloDaModificare)
+		{
+			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
+			if(articolo != null)
+			{
+				
+				ArrayDiArticoli.set(ArrayDiArticoli.indexOf(articolo),ArticoloDaModificare);
+				return true;
+				
+			}
+			return false;
+		} 
+		
+		
+	
 		
 		public boolean EliminaArticolo(int CodiceArticoloDaEliminare) {
 			Articolo articoloElimina= CercaArticoloPerCodice(CodiceArticoloDaEliminare);

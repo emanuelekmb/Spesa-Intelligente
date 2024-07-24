@@ -1,5 +1,7 @@
 package Articoli;
-
+//import java.time.LocalDateTime; // Importa la data di oggi tramite la classe java.time
+//import java.time.format.DateTimeFormatter; // Import la formattazione della data tramite l'altra classe
+import java.time.*;//Con questo comando importi tutta la classe time.
 public class Articolo 
 {
 
@@ -9,16 +11,20 @@ public class Articolo
 	private String CategoriaArticolo;
 	private double PrezzoArticolo;
 	private double ScontoArticolo;
-	
-	
+	private double PrezzoScontato;
+	private LocalDate DataInizioOfferta;
+	private LocalDate DataFineOfferta;
 	//costruttore 
-	public Articolo(int CodiceArticolo,String NomeArticolo,String CategoriaArticolo,double PrezzoArticolo,double ScontoArticolo) 
-	{	
+	public Articolo(int CodiceArticolo,String NomeArticolo,String CategoriaArticolo,double PrezzoArticolo, double ScontoArticolo,LocalDate DataInizioOfferta, LocalDate DataFineOfferta)
+	{
 		this.CodiceArticolo=CodiceArticolo;
 		this.NomeArticolo=NomeArticolo;
 		this.CategoriaArticolo=CategoriaArticolo;
 		this.PrezzoArticolo=PrezzoArticolo;
 		this.ScontoArticolo=ScontoArticolo;
+		this.PrezzoScontato=PrezzoArticolo-((PrezzoArticolo*ScontoArticolo)/100);
+		this.DataInizioOfferta=DataInizioOfferta;
+		this.DataFineOfferta=DataFineOfferta;
 	}
 	
 	
@@ -38,6 +44,11 @@ public class Articolo
 	public void setScontoArticolo(double ScontoArticolo)
 	{this.ScontoArticolo=ScontoArticolo;}
 	
+	public void setDataInizioOfferta(LocalDate DataInizioOfferta)
+	{this.DataInizioOfferta=DataInizioOfferta;}
+	
+	public void setDataFineOfferta(LocalDate DataFineOfferta)
+	{this.DataFineOfferta=DataFineOfferta;}
 	
 	//Metodi getter 
 	public int getCodiceArticolo() 
@@ -55,14 +66,23 @@ public class Articolo
 	public double getScontoArticolo() 
 	{return ScontoArticolo;}
 	
+	public double getPrezzoScontato()
+	{return PrezzoScontato;}
+	
+	public LocalDate getDataInizioOfferta()
+	{return DataInizioOfferta;}
+	
+	public LocalDate getDataFineOfferta()
+	{return DataFineOfferta;}
+	
+	
 	
 	//Stampiamo
-		@Override
-		public String toString() 
-		{
-			return "\nCodice articolo:\n" + CodiceArticolo + "\nNome articolo: \n"+NomeArticolo+ "\nCategoria articolo:\n"+CategoriaArticolo+"\nPrezzo articolo:\n"+PrezzoArticolo+"\nSconto articolo:\n"+ScontoArticolo+"\n";
-
-		}
+	@Override
+	public String toString() 
+	{
+	  return "\nCodice articolo:" + CodiceArticolo + "\nNome articolo:"+NomeArticolo+ "\nCategoria articolo:"+CategoriaArticolo+"\nPrezzo articolo:"+PrezzoArticolo+"\nSconto articolo:"+ScontoArticolo+"\nPrezzo Scontato:"+PrezzoScontato+"\nData inizio offerta:"+DataInizioOfferta+"\nData fine offerta:"+DataFineOfferta;
+	}
 
 	
 }
