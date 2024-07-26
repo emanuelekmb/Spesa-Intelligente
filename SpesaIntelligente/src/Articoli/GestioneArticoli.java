@@ -52,7 +52,16 @@ public class GestioneArticoli {
 		}
 		
 		
+		public LocalDate getDataFineOfferta(int codiceArticolo) {
+	        Articolo articolo = CercaArticoloPerCodice(codiceArticolo);
+	            return articolo.getDataFineOfferta(); 
+	    }
+		//Queste due funzioni sono da rivedere - portiamo di qua parte di quello scritto sul main per la mdoifica della data
 		
+		public LocalDate getInizioInizioOfferta(int codiceArticolo) {
+	        Articolo articolo = CercaArticoloPerCodice(codiceArticolo);
+	            return articolo.getDataInizioOfferta(); 
+	    }
 		
 		public boolean VerificaCodiceSePresente( int code)
 		{
@@ -78,7 +87,41 @@ public class GestioneArticoli {
 				
 		}
 		
-		
+		 public void ModificaPrezzo(int codice, double nuovoPrezzo) {
+		        for (Articolo articolo : ArrayDiArticoli) {
+		            if (articolo.getCodiceArticolo() == codice) {
+		                articolo.setPrezzoArticolo(nuovoPrezzo);
+		                break;
+		            }
+		        }
+		    }
+
+		    public void ModificaSconto(int codice, double nuovoSconto) {
+		        for (Articolo articolo : ArrayDiArticoli) {
+		            if (articolo.getCodiceArticolo() == codice) {
+		                articolo.setScontoArticolo(nuovoSconto);
+		                break;
+		            }
+		        }
+		    }
+
+		    public void ModificaDataInizioSconto(int codice, LocalDate nuovaDataInizio) {
+		        for (Articolo articolo : ArrayDiArticoli) {
+		            if (articolo.getCodiceArticolo() == codice) {
+		                articolo.setDataInizioOfferta(nuovaDataInizio);
+		                break;
+		            }
+		        }
+		    }
+
+		    public void ModificaDataFineSconto(int codice, LocalDate nuovaDataFine) {
+		        for (Articolo articolo : ArrayDiArticoli) {
+		            if (articolo.getCodiceArticolo() == codice) {
+		                articolo.setDataFineOfferta(nuovaDataFine);
+		                break;
+		            }
+		        }
+		    }
 		
 		
 		//Stampa tutti gli oggetti di articoli presenti nell'array
@@ -104,7 +147,25 @@ public class GestioneArticoli {
 			}
 			return null;
 		}
-		
+		 public static void ModificaDataInizioSconto(int codice, GestioneArticoli gestioneArticoli, LocalDate nuovaDataInizio) {
+		        Articolo articolo = gestioneArticoli.CercaArticoloPerCodice(codice);
+		        if (articolo != null) {
+		            articolo.setDataInizioOfferta(nuovaDataInizio);
+		            System.out.println("Data di inizio offerta modificata con successo.");
+		        } else {
+		            System.out.println("Articolo non trovato.");
+		        }
+		    }
+
+		    public static void ModificaDataFineSconto(int codice, GestioneArticoli gestioneArticoli, LocalDate nuovaDataFine) {
+		        Articolo articolo = gestioneArticoli.CercaArticoloPerCodice(codice);
+		        if (articolo != null) {
+		            articolo.setDataFineOfferta(nuovaDataFine);
+		            System.out.println("Data di fine offerta modificata con successo.");
+		        } else {
+		            System.out.println("Articolo non trovato.");
+		        }
+		    }
 		public void RicercaPerCategoria(String RicercaPerCategoria)
 		{
 			for(Articolo StampaArticoloPerCategoria: ArrayDiArticoli)
@@ -130,66 +191,6 @@ public class GestioneArticoli {
 			}
 		}
 		
-		
-		public boolean ModificaPrezzo(int CodiceArticoloDaModificare, double NuovoPrezzo)
-		{
-			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
-			if(articolo != null)
-			{
-				articolo.setPrezzoArticolo(NuovoPrezzo);
-				return true;
-				
-			}
-			return false;
-		} 
-		
-		
-		
-		
-		
-		
-		
-		
-		public boolean ModificaSconto(int CodiceArticoloDaModificare, double NuovoSconto)
-		{
-			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
-			if(articolo != null)
-			{
-				articolo.setScontoArticolo(NuovoSconto);
-				return true;
-				
-			}
-			return false;
-		} 
-		
-		
-		
-		
-		
-		public boolean ModificaDataInizioOfferta(int CodiceArticoloDaModificare, LocalDate NuovaDataInizio)
-		{
-			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
-			if(articolo != null && articolo.getDataFineOfferta().isAfter(NuovaDataInizio))
-			{
-				articolo.setDataInizioOfferta(NuovaDataInizio);;
-				return true;
-				
-			}
-			return false;
-		} 
-		
-		
-		public boolean ModificaDataFineOfferta(int CodiceArticoloDaModificare, LocalDate NuovaDataInizio)
-		{
-			Articolo articolo = CercaArticoloPerCodice(CodiceArticoloDaModificare);
-			if(articolo != null && articolo.getDataFineOfferta().isBefore(NuovaDataInizio))
-			{
-				articolo.setDataInizioOfferta(NuovaDataInizio);;
-				return true;
-				
-			}
-			return false;
-		} 
 		
 		
 		public boolean ModificaArticolo(int CodiceArticoloDaModificare, Articolo ArticoloDaModificare)

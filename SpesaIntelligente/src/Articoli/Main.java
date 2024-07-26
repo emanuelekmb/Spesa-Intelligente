@@ -21,8 +21,8 @@ public class Main {
         gestioneArticoli.AggiungiArticoloCompleto(new Articolo(005, "Pere", "Frutta", 3.7, 30,DataDiOggi,DataDiOggi));
 
         // Loop fino all'autenticazione dell'utente 
-        //Dopo lo attiviamo AutenticazioneUtente(scanner, gestioneArticoli);
-        showAdminMenu(scanner, gestioneArticoli);
+       
+     AutenticazioneUtente(scanner, gestioneArticoli);
         // Chiudiamo lo scanner alla fine
         scanner.close();
     }
@@ -64,7 +64,7 @@ public class Main {
             System.out.println("9. Modifica prezzo.");
             System.out.println("10. Modifica sconto.");
             int scelta = VerificaIntero(scanner, "Scegli un'opzione: ");
-
+            LocalDate DataDiOggi = LocalDate.now();
             switch (scelta) {
                 case 0:
                     AutenticazioneUtente(scanner, gestioneArticoli);
@@ -86,20 +86,20 @@ public class Main {
                     gestioneArticoli.RicercaPerCategoria(categoriaDiRicerca);
                     break;
                 case 6:
-                    double categoriaDiSconto = VerficaDouble(scanner, "Ricerca per sconto maggiore o uguale: ");
+                    double categoriaDiSconto = VerificaDouble(scanner, "Ricerca per sconto maggiore o uguale: ");
                     gestioneArticoli.RicercaPerSconto(categoriaDiSconto);
                     break;
                 case 7:
-                	ModificaDataInizioSconto(scanner, gestioneArticoli);
+                	ModificaDataInizioOfferta(scanner, gestioneArticoli, DataDiOggi);
                     break;
                 case 8:
-                	ModificaDataFineSconto(scanner, gestioneArticoli);
+                	ModificaDataFineOfferta(scanner, gestioneArticoli, DataDiOggi);
                     break;
                 case 9:
-                   ModificaPrezzo(scanner, gestioneArticoli);
+                    ModificaPrezzo(scanner, gestioneArticoli);
                     break;
                 case 10:
-                	ModificaSconto(scanner, gestioneArticoli);
+                    ModificaSconto(scanner, gestioneArticoli);
                     break;
                 default:
                     System.out.println("Opzione non valida.");
@@ -108,6 +108,9 @@ public class Main {
         }
     }
 
+    
+    
+    
     public static void showUserMenu(Scanner scanner, GestioneArticoli gestioneArticoli) {
         while (true) {
             System.out.println("\nUser\n");
@@ -131,7 +134,7 @@ public class Main {
                     gestioneArticoli.RicercaPerCategoria(categoria);
                     break;
                 case 3:
-                    double sconto = VerficaDouble(scanner, "\nRicerca per sconto maggiore o uguale: \n");
+                    double sconto = VerificaDouble(scanner, "\nRicerca per sconto maggiore o uguale: \n");
                     gestioneArticoli.RicercaPerSconto(sconto);
                     break;
                 default:
@@ -155,8 +158,8 @@ public class Main {
         String nomeArt=VerificaStringa(scanner, "\nInserisci il nome dell'articolo: \n");
         //String nomeArt = scanner.nextLine();
         String categoriaArt = VerificaStringa(scanner, "\nInserisci la categoria dell'articolo: \n");
-        double prezzoArt = VerficaDouble(scanner, "\nInserisci il prezzo dell'articolo: \n");
-        double scontoArt = VerficaDouble(scanner, "\nInserisci l'eventuale sconto dell'articolo, se non presente inserisci 0: \n");
+        double prezzoArt = VerificaDouble(scanner, "\nInserisci il prezzo dell'articolo: \n");
+        double scontoArt = VerificaDouble(scanner, "\nInserisci l'eventuale sconto dell'articolo, se non presente inserisci 0: \n");
         LocalDate DataInizioOff=null;
         LocalDate DataFineOff=null;
         if(scontoArt>0)
@@ -183,6 +186,10 @@ public class Main {
     	}
     }
 
+    
+    
+    
+    
     public static LocalDate InputEVerificaData(Scanner scanner, String messaggio) 
     {
     	LocalDate DataDiOggi = LocalDate.now();
@@ -231,75 +238,121 @@ public class Main {
         }
     }
 
-    public static void ModificaPrezzo(Scanner scanner, GestioneArticoli gestioneArticoli) {
+    public static void ModificaArticolo(Scanner scanner, GestioneArticoli gestioneArticoli) {
         while (true) {
-            int codiceDiRicerca = inserisciEVerificaArticolo(scanner, gestioneArticoli);
-            double nuovoPrezzo = VerficaDouble(scanner, "Inserisci il nuovo prezzo dell'articolo: ");
-            boolean modificatoArt = gestioneArticoli.ModificaPrezzo(codiceDiRicerca, nuovoPrezzo);
-            if (modificatoArt) {
-                System.out.println("Prezzo modificato");
-                break;
+            int codiceDiRicerca = inserisciEVerificaArticolo(scanner, gestioneArticoli);//Qui verifichiamo se il codice è presente nell'array
+            int nuovoCodice = VerificaIntero(scanner, "Inserisci il nuovo codice dell'articolo: ");
+            boolean verificacodici = gestioneArticoli.VerificaCodiceSePresente(nuovoCodice);//COn verifica codice facciamo l'inverso e controlliamo che il nuovo codice inserito dall'utente non sia già presente
+            if (verificacodici) {
+                String nuovoNome = VerificaStringa(scanner, "Inserisci il nuovo nome dell'articolo: ");
+                String nuovaCategoria = VerificaStringa(scanner, "Inserisci la nuova categoria dell'articolo: ");
+                double nuovoPrezzo = VerificaDouble(scanner, "Inserisci il nuovo prezzo dell'articolo: ");
+                double nuovoSconto = VerificaDouble(scanner, "Inserisci il nuovo sconto dell'articolo da modificare, se non presente inserisci 0: ");
+                LocalDate DataInizioOff;
+                LocalDate DataFineOff;
+
+                while (true) {
+                    DataInizioOff = InputEVerificaData(scanner, "\nInserisci la data di inizio offerta:\n");
+                    DataFineOff = InputEVerificaData(scanner, "\nInserisci la data di fine offerta:\n");
+
+                    if (DataInizioOff.isAfter(DataFineOff)) {
+                        System.out.println("La data di inizio offerta non può essere successiva alla data di fine offerta.");
+                    } else {
+                        break; // Esci dal ciclo solo se le date sono corrette
+                    }
+                }
+
+                Articolo nuovoArticoloModificato = new Articolo(nuovoCodice, nuovoNome, nuovaCategoria, nuovoPrezzo, nuovoSconto, DataInizioOff, DataFineOff);
+                boolean modificatoArt = gestioneArticoli.ModificaArticolo(codiceDiRicerca, nuovoArticoloModificato);
+                if (modificatoArt) {
+                    System.out.println("Articolo modificato");
+                    break;
+                } else {
+                    System.out.println("Errore nella modifica dell'articolo. Riprova.");
+                }
             } else {
-                System.out.println("Errore nella modifica del prezzo. Riprova.");
+                System.out.println("Il nuovo codice dell'articolo è già presente. Riprova.");
+            }
+        }
+    }
+
+    
+    
+    
+    public static void ModificaDataInizioOfferta(Scanner scanner, GestioneArticoli gestioneArticoli, LocalDate DataDiOggi) {
+        while (true) {
+            int codiceDaModificare = VerificaIntero(scanner, "Inserisci il codice dell'articolo di cui modificare la data di inizio offerta: ");
+            Articolo articoloDaModificare = gestioneArticoli.CercaArticoloPerCodice(codiceDaModificare);
+            if (articoloDaModificare != null) {
+                LocalDate dataInizioModificata = InputEVerificaData(scanner, "Inserisci la nuova data di inizio sconto:");
+                LocalDate dataFineOfferta = gestioneArticoli.getDataFineOfferta(codiceDaModificare);//Mi serve per il controllo anche se così non va bene 
+                //Perché utilizzi un metodo che è già presente sull'oggetto articolo ovvero getDataFineOfferta - Magari molte operazioni che ci sono qui si potrebbero fare direttamente su gestioneArticoli?
+
+                if (dataInizioModificata.isAfter(DataDiOggi) && (dataFineOfferta == null || dataInizioModificata.isBefore(dataFineOfferta))) {
+                    articoloDaModificare.setDataInizioOfferta(dataInizioModificata);
+                    break;
+                } else if (dataFineOfferta != null && dataInizioModificata.isAfter(dataFineOfferta)) {
+                    System.out.println("La data di inizio sconto non può essere successiva alla data di fine offerta.");
+                } else {
+                    System.out.println("La data di inizio sconto non può essere precedente a quella di oggi.");
+                }
+            } else {
+                System.out.println("Articolo non trovato.");
+            }
+            
+        }
+        }
+
+    public static void ModificaDataFineOfferta(Scanner scanner, GestioneArticoli gestioneArticoli, LocalDate DataDiOggi) {
+        while (true) {
+            int codiceDaModificare = VerificaIntero(scanner, "Inserisci il codice dell'articolo di cui modificare la data di fine offerta: ");
+            Articolo articoloDaModificare = gestioneArticoli.CercaArticoloPerCodice(codiceDaModificare);
+            if (articoloDaModificare != null) {
+                LocalDate dataFineModificata = InputEVerificaData(scanner, "Inserisci la nuova data di fine offerta:");
+                LocalDate dataInizioOfferta = articoloDaModificare.getDataInizioOfferta(); // Assumendo che `Articolo` abbia questo metodo
+
+                if (dataFineModificata.isAfter(DataDiOggi) && (dataInizioOfferta == null || dataFineModificata.isAfter(dataInizioOfferta))) {
+                    articoloDaModificare.setDataFineOfferta(dataFineModificata);
+                    break;
+                } else if (dataInizioOfferta != null && dataFineModificata.isBefore(dataInizioOfferta)) {
+                    System.out.println("La data di fine offerta non può essere precedente alla data di inizio offerta.");
+                } else {
+                    System.out.println("La data di fine offerta non può essere precedente a quella di oggi.");
+                }
+            } else {
+                System.out.println("Articolo non trovato.");
             }
         }
     }
     
     
     
-  
-    
-    /*public static void ModificaSconto(Scanner scanner, GestioneArticoli gestioneArticoli)
-    {
-    	int codiceDiRicerca = VerificaIntero(scanner, "Inserisci il codice dell'articolo da cercare: ");
-    	boolean ScontoModificato = gestioneArticoli.ModificaArticolo(codiceDiRicerca, nuovoArticoloModificato);
-    	 if (ScontoModificato) {
-             System.out.println("Articolo modificato");
-         } else {
-             System.out.println("Articolo non modificato");
-         }
-    }    */
-    
-    public static void ModificaArticolo(Scanner scanner, GestioneArticoli gestioneArticoli) {
-    	 while (true) {
-             int codiceDiRicerca = inserisciEVerificaArticolo(scanner, gestioneArticoli);//Qui verifichiamo se il codice è presente nell'array
-             int nuovoCodice = VerificaIntero(scanner, "Inserisci il nuovo codice dell'articolo: ");
-             boolean verificacodici = gestioneArticoli.VerificaCodice(nuovoCodice);//COn verifica codice facciamo l'inverso e controlliamo che il nuovo codice inserito dall'utente non sia già presente
-             if (verificacodici) {
-                 String nuovoNome = VerificaStringa(scanner, "Inserisci il nuovo nome dell'articolo: ");
-                 String nuovaCategoria = VerificaStringa(scanner, "Inserisci la nuova categoria dell'articolo: ");
-                 double nuovoPrezzo = VerficaDouble(scanner, "Inserisci il nuovo prezzo dell'articolo: ");
-                 double nuovoSconto = VerficaDouble(scanner, "Inserisci il nuovo sconto dell'articolo da modificare, se non presente inserisci 0: ");
-                 LocalDate DataInizioOff;
-                 LocalDate DataFineOff;
-
-                 while (true) {
-                     DataInizioOff = InputEVerificaData(scanner, "\nInserisci la data di inizio offerta:\n");
-                     DataFineOff = InputEVerificaData(scanner, "\nInserisci la data di fine offerta:\n");
-
-                     if (DataInizioOff.isAfter(DataFineOff)) {
-                         System.out.println("La data di inizio offerta non può essere successiva alla data di fine offerta.");
-                     } else {
-                         break; // Esci dal ciclo solo se le date sono corrette
-                     }
-                 }
-
-                 Articolo nuovoArticoloModificato = new Articolo(nuovoCodice, nuovoNome, nuovaCategoria, nuovoPrezzo, nuovoSconto, DataInizioOff, DataFineOff);
-                 boolean modificatoArt = gestioneArticoli.ModificaArticolo(codiceDiRicerca, nuovoArticoloModificato);
-                 if (modificatoArt) {
-                     System.out.println("Articolo modificato");
-                     break;
-                 } else {
-                     System.out.println("Errore nella modifica dell'articolo. Riprova.");
-                 }
-             } else {
-                 System.out.println("Il nuovo codice dell'articolo è già presente. Riprova.");
-             }
-         }
-     }
-
     
     
+    public static void ModificaPrezzo(Scanner scanner, GestioneArticoli gestioneArticoli) {
+        int codiceArt = VerificaIntero(scanner, "Inserisci il codice dell'articolo da modificare: ");
+        boolean trovato = gestioneArticoli.VerificaCodiceSePresente(codiceArt);
+        if (trovato) {
+            double nuovoPrezzo = VerificaDouble(scanner, "Inserisci il nuovo prezzo dell'articolo: ");
+            gestioneArticoli.ModificaPrezzo(codiceArt, nuovoPrezzo);
+        } else {
+            System.out.println("Articolo non trovato.");
+        }
+    }
+
+    public static void ModificaSconto(Scanner scanner, GestioneArticoli gestioneArticoli) {
+        int codiceArt = VerificaIntero(scanner, "Inserisci il codice dell'articolo da modificare: ");
+        boolean trovato = gestioneArticoli.VerificaCodiceSePresente(codiceArt);
+        if (trovato) {
+            double nuovoSconto = VerificaDouble(scanner, "Inserisci il nuovo sconto dell'articolo: ");
+            gestioneArticoli.ModificaSconto(codiceArt, nuovoSconto);
+        } else {
+            System.out.println("Articolo non trovato.");
+        }
+    }
+    
+    
+    //Ricordarsi reservation prt011 piano personale
     
     
     public static int VerificaIntero(Scanner scanner, String messaggio) {
@@ -356,7 +409,7 @@ public class Main {
     }
 
     // Funzione per leggere un double con controllo del tipo di dato
-    public static double VerficaDouble(Scanner scanner, String messaggio) {
+    public static double VerificaDouble(Scanner scanner, String messaggio) {
         while (true) {
             System.out.println(messaggio);
            

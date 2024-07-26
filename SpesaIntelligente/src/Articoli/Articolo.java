@@ -38,11 +38,16 @@ public class Articolo
 	public void setCategoriaArticolo(String CategoriaArticolo)
 	{this.CategoriaArticolo=CategoriaArticolo;}
 	
-	public void setPrezzoArticolo(double PrezzoArticolo)
-	{this.PrezzoArticolo=PrezzoArticolo;}
-	
-	public void setScontoArticolo(double ScontoArticolo)
-	{this.ScontoArticolo=ScontoArticolo;}
+	// Modifiche ai setter di PrezzoArticolo e ScontoArticolo
+	public void setPrezzoArticolo(double PrezzoArticolo) {
+	    this.PrezzoArticolo = PrezzoArticolo;
+	    aggiornaPrezzoScontato();
+	}
+//Altrimenti dopo non li aggiorna se modifico se utilizzo la funzione del modifica
+	public void setScontoArticolo(double ScontoArticolo) {
+	    this.ScontoArticolo = ScontoArticolo;
+	    aggiornaPrezzoScontato();
+	}
 	
 	public void setDataInizioOfferta(LocalDate DataInizioOfferta)
 	{this.DataInizioOfferta=DataInizioOfferta;}
@@ -75,7 +80,12 @@ public class Articolo
 	public LocalDate getDataFineOfferta()
 	{return DataFineOfferta;}
 	
-	
+	// Attributo aggiunto
+	private void aggiornaPrezzoScontato() {
+	    this.PrezzoScontato = PrezzoArticolo - ((PrezzoArticolo * ScontoArticolo) / 100);
+	}
+
+
 	
 	//Stampiamo
 	@Override
